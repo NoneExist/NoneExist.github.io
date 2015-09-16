@@ -1,0 +1,52 @@
+<html>
+<head>
+    <script src="js/three.js"></script>
+    <script src="js/threestrap.js"></script>
+</head>
+<body id="body">
+    <script type="text/javascript">
+var three = THREE.Bootstrap({
+    element:document.body, 
+    plugins:['core', 'stats', 'controls', 'warmup', /*'cursor',*/ 'fallback', 'time'],
+    'controls':{
+        klass:THREE.OrbitControls
+    },
+});
+
+// var mesh = new THREE.Mesh(new THREE.CubeGeometry(.5, .5, .5), new THREE.MeshNormalMaterial());
+// three.scene.add(mesh);
+// three.camera.position.set(0,0,-1);
+// three.camera.lookAt(new THREE.Vector3());
+
+function addPlane(image, scale, position, rotation) {
+    var img = new THREE.MeshBasicMaterial({
+        map:THREE.ImageUtils.loadTexture(image),
+        side:THREE.DoubleSide
+    });
+    img.map.needUpdate = true;
+
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry(20,20), img);
+    plane.overdraw = true;
+    plane.position.copy(position);
+    plane.rotation.copy(rotation);
+    plane.scale.copy(scale);
+    three.scene.add(plane);
+}
+
+var pi = 3.14159265358979;
+
+addPlane('img/shot_front_square.png', new THREE.Vector3(1,1,1), new THREE.Vector3(0,0,10), new THREE.Euler(0,0,0));
+addPlane('img/shot_right_square.png', new THREE.Vector3(1,1,1), new THREE.Vector3(10,0,0), new THREE.Euler(0,pi/2,0));
+addPlane('img/shot_back_square.png', new THREE.Vector3(1,1,1), new THREE.Vector3(0,0,-10), new THREE.Euler(0,pi,0));
+addPlane('img/shot_left_square.png', new THREE.Vector3(1,1,1), new THREE.Vector3(-10,0,0), new THREE.Euler(0,pi*3/2,0));
+
+// rotate the camera
+three.on('update', function () {
+  var t = three.Time.now;
+  // three.camera.position.set(Math.cos(t), .5, Math.sin(t));
+  three.camera.position.set(0,0,0);
+  three.camera.lookAt(new THREE.Vector3(Math.cos(t/5), 0, Math.sin(t/5)));
+});
+    </script>
+</body>
+</html>
